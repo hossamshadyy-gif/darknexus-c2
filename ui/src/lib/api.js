@@ -3,7 +3,9 @@
  * Handles JWT auth and REST calls to the teamserver
  */
 
-const API_BASE = '/api'
+// In production, set VITE_API_URL to the teamserver address (e.g. https://your-server:8443/api)
+// For local dev, the Vite proxy forwards /api to the teamserver
+const API_BASE = import.meta.env.VITE_API_URL || '/api'
 
 let authToken = localStorage.getItem('dn_token') || null
 
