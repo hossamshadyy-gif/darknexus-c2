@@ -13,16 +13,19 @@ import (
 )
 
 type Report struct {
-	Target     string             `json:"target"`
-	Protocol   string             `json:"protocol"`
-	StartTime  time.Time          `json:"start_time"`
-	EndTime    time.Time          `json:"end_time"`
-	Duration   time.Duration      `json:"duration"`
-	Iterations int64              `json:"iterations"`
-	Findings   []*monitor.Finding `json:"findings"`
-	ConnErrors int64              `json:"connection_errors"`
-	Timeouts   int64              `json:"timeouts"`
-	Responses  int64              `json:"responses"`
+	Target        string             `json:"target"`
+	Protocol      string             `json:"protocol"`
+	StartTime     time.Time          `json:"start_time"`
+	EndTime       time.Time          `json:"end_time"`
+	Duration      time.Duration      `json:"duration"`
+	Iterations    int64              `json:"iterations"`
+	Findings      []*monitor.Finding `json:"findings"`
+	UniqueFindings int               `json:"unique_findings"`
+	ConnErrors    int64              `json:"connection_errors"`
+	Timeouts      int64              `json:"timeouts"`
+	Responses     int64              `json:"responses"`
+	CorpusSize    int64              `json:"corpus_size"`
+	CoveragePaths int64             `json:"coverage_paths"`
 }
 
 type Reporter struct {
@@ -91,26 +94,29 @@ func (r *Reporter) writeText(path string, report *Report) error {
 	}
 	defer f.Close()
 
-	fmt.Fprintf(f, "╔══════════════════════════════════════════════════════╗\n")
-	fmt.Fprintf(f, "║         DARKNEXUS PROTOCOL FUZZER REPORT            ║\n")
-	fmt.Fprintf(f, "╚══════════════════════════════════════════════════════╝\n\n")
-	fmt.Fprintf(f, "Target:      %s\n", report.Target)
-	fmt.Fprintf(f, "Protocol:    %s\n", report.Protocol)
-	fmt.Fprintf(f, "Start:       %s\n", report.StartTime.Format(time.RFC3339))
-	fmt.Fprintf(f, "End:         %s\n", report.EndTime.Format(time.RFC3339))
-	fmt.Fprintf(f, "Duration:    %s\n", report.Duration.Round(time.Millisecond))
-	fmt.Fprintf(f, "Iterations:  %d\n", report.Iterations)
-	fmt.Fprintf(f, "Findings:    %d\n", len(report.Findings))
-	fmt.Fprintf(f, "Conn Errors: %d\n", report.ConnErrors)
-	fmt.Fprintf(f, "Timeouts:    %d\n", report.Timeouts)
-	fmt.Fprintf(f, "Responses:   %d\n\n", report.Responses)
+	fmt.Fprintf(f, "+------------------------------------------------------+\n")
+	fmt.Fprintf(f, "|         DARKNEXUS PROTOCOL FUZZER REPORT              |\n")
+	fmt.Fprintf(f, "+------------------------------------------------------+\n\n")
+	fmt.Fprintf(f, "Target:         %s\n", report.Target)
+	fmt.Fprintf(f, "Protocol:       %s\n", report.Protocol)
+	fmt.Fprintf(f, "Start:          %s\n", report.StartTime.Format(time.RFC3339))
+	fmt.Fprintf(f, "End:            %s\n", report.EndTime.Format(time.RFC3339))
+	fmt.Fprintf(f, "Duration:       %s\n", report.Duration.Round(time.Millisecond))
+	fmt.Fprintf(f, "Iterations:     %d\n", report.Iterations)
+	fmt.Fprintf(f, "Unique Findings: %d\n", report.UniqueFindings)
+	fmt.Fprintf(f, "Total Findings: %d\n", len(report.Findings))
+	fmt.Fprintf(f, "Corpus Size:    %d\n", report.CorpusSize)
+	fmt.Fprintf(f, "Coverage Paths: %d\n", report.CoveragePaths)
+	fmt.Fprintf(f, "Conn Errors:    %d\n", report.ConnErrors)
+	fmt.Fprintf(f, "Timeouts:       %d\n", report.Timeouts)
+	fmt.Fprintf(f, "Responses:      %d\n\n", report.Responses)
 
 	sevCounts := map[monitor.FindingSeverity]int{}
 	for _, finding := range report.Findings {
 		sevCounts[finding.Severity]++
 	}
 
-	fmt.Fprintf(f, "── Severity Summary ──\n")
+	fmt.Fprintf(f, "-- Severity Summary --\n")
 	fmt.Fprintf(f, "  CRITICAL: %d\n", sevCounts[monitor.SevCritical])
 	fmt.Fprintf(f, "  HIGH:     %d\n", sevCounts[monitor.SevHigh])
 	fmt.Fprintf(f, "  MEDIUM:   %d\n", sevCounts[monitor.SevMedium])
@@ -118,7 +124,7 @@ func (r *Reporter) writeText(path string, report *Report) error {
 	fmt.Fprintf(f, "  INFO:     %d\n\n", sevCounts[monitor.SevInfo])
 
 	for _, finding := range report.Findings {
-		fmt.Fprintf(f, "── Finding #%d ──\n", finding.ID)
+		fmt.Fprintf(f, "-- Finding #%d --\n", finding.ID)
 		fmt.Fprintf(f, "  Severity:    %s\n", finding.Severity)
 		fmt.Fprintf(f, "  Type:        %s\n", finding.Type)
 		fmt.Fprintf(f, "  Description: %s\n", finding.Description)

@@ -21,6 +21,9 @@ type FuzzerConfig struct {
 	Verbose    bool
 	Strategies []mutator.Strategy
 	Profile    *FuzzProfile
+	EnablePCAP bool
+	CorpusDir  string
+	PoolSize   int
 }
 
 type FuzzProfile struct {
