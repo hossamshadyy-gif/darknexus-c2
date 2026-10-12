@@ -1,0 +1,59 @@
+# Dark Nexus C2 Profile: Default
+# Standard HTTPS beacon profile with generic web traffic patterns
+
+name: "default"
+description: "Generic HTTPS traffic disguised as API polling"
+
+# HTTP Configuration
+http:
+  # Check-in beacon (implant -> teamserver)
+  checkin:
+    uri: "/api/v1/status"
+    method: "POST"
+    headers:
+      Content-Type: "application/octet-stream"
+      Accept: "*/*"
+      Cache-Control: "no-cache"
+
+  # Task result upload (implant -> teamserver)
+  result:
+    uri: "/api/v1/report"
+    method: "POST"
+    headers:
+      Content-Type: "application/octet-stream"
+      Accept: "*/*"
+
+  # Default page (returned to scanners / browsers)
+  default_page:
+    status: 200
+    headers:
+      Server: "nginx/1.24.0"
+      Content-Type: "text/html"
+    body: |
+      <!DOCTYPE html>
+      <html>
+      <head><title>Welcome to nginx!</title></head>
+      <body>
+      <h1>Welcome to nginx!</h1>
+      <p>If you see this page, the nginx web server is successfully installed.</p>
+      </body>
+      </html>
+
+# User-Agent rotation pool
+user_agents:
+  - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+  - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/119.0.0.0 Safari/537.36"
+  - "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0"
+
+# Beacon timing
+beacon:
+  sleep: 5          # seconds between check-ins
+  jitter: 20        # percent jitter (0-100)
+  max_retries: 10   # consecutive failures before exit
+  kill_date: ""     # YYYYMMDD format, empty = no kill date
+
+# TLS
+tls:
+  # Self-signed cert for dev, replace with Let's Encrypt for ops
+  cert: ""
+  key: ""

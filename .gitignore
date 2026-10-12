@@ -1,0 +1,35 @@
+# Binaries
+*.exe
+*.dll
+*.so
+*.dylib
+darknexus-server
+
+# Go
+vendor/
+
+# Database
+*.db
+*.db-wal
+*.db-shm
+
+# TLS certs (auto-generated)
+*.pem
+*.crt
+*.key
+
+# Node
+ui/node_modules/
+ui/dist/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+implant/build/
+builder/build/

@@ -1,0 +1,94 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #09090b;
+    color: #d4d4d8;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #18181b;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #3f3f46;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #52525b;
+  }
+}
+
+@layer components {
+  .glass-panel {
+    @apply bg-surface-2 border border-zinc-800 rounded-lg;
+  }
+
+  .status-dot {
+    @apply w-2 h-2 rounded-full inline-block;
+  }
+
+  .status-alive {
+    @apply bg-accent-green shadow-[0_0_6px_rgba(34,197,94,0.5)];
+    animation: pulse-green 2s ease-in-out infinite;
+  }
+
+  .status-dead {
+    @apply bg-zinc-600;
+  }
+
+  .btn-primary {
+    @apply px-4 py-2 bg-nexus-600 hover:bg-nexus-500 text-white rounded-md
+           font-medium text-sm transition-colors duration-150;
+  }
+
+  .btn-danger {
+    @apply px-4 py-2 bg-red-600/20 hover:bg-red-600/40 text-red-400
+           border border-red-600/30 rounded-md font-medium text-sm
+           transition-colors duration-150;
+  }
+
+  .btn-ghost {
+    @apply px-4 py-2 text-zinc-400 hover:text-zinc-200 hover:bg-surface-3
+           rounded-md font-medium text-sm transition-colors duration-150;
+  }
+
+  .input-field {
+    @apply w-full px-3 py-2 bg-surface-1 border border-zinc-700
+           rounded-md text-zinc-200 text-sm placeholder-zinc-500
+           focus:outline-none focus:border-nexus-500 focus:ring-1 focus:ring-nexus-500/30
+           transition-colors duration-150;
+  }
+
+  .table-row {
+    @apply border-b border-zinc-800/50 hover:bg-surface-3/50
+           transition-colors duration-100;
+  }
+
+  .nav-link {
+    @apply flex items-center gap-3 px-3 py-2 text-sm text-zinc-400
+           hover:text-zinc-200 hover:bg-surface-3 rounded-md
+           transition-colors duration-150;
+  }
+
+  .nav-link-active {
+    @apply text-zinc-100 bg-nexus-600/20 border-l-2 border-nexus-500;
+  }
+
+  .terminal-output {
+    @apply font-mono text-xs text-zinc-300 bg-surface-0 p-3
+           rounded-md border border-zinc-800 whitespace-pre-wrap
+           overflow-auto max-h-96;
+  }
+}
+
+@keyframes pulse-green {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

