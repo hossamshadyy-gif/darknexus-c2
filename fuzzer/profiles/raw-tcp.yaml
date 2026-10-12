@@ -1,0 +1,39 @@
+name: raw-tcp
+protocol:
+  type: tcp
+  delimiter: "\n"
+
+mutation:
+  max_size: 131072
+  strategies:
+    - bitflip
+    - byteinsert
+    - boundary
+    - format
+    - repeat
+    - truncate
+    - blockswap
+    - arithmetic
+    - havoc
+  dictionary:
+    - "\x00\x00\x00\x00"
+    - "\xff\xff\xff\xff"
+    - "\x41\x41\x41\x41"
+
+monitor:
+  crash_patterns:
+    - "segmentation fault"
+    - "segfault"
+    - "panic"
+    - "abort"
+    - "core dumped"
+    - "access violation"
+    - "heap corruption"
+    - "buffer overflow"
+    - "stack smashing"
+  error_patterns:
+    - "error"
+    - "exception"
+    - "invalid"
+    - "malformed"
+    - "unexpected"

@@ -33,3 +33,5 @@ Thumbs.db
 # Build artifacts
 implant/build/
 builder/build/
+fuzzer/build/
+fuzzer_results/

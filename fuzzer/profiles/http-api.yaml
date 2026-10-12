@@ -1,0 +1,50 @@
+name: http-api
+protocol:
+  type: tcp
+  handshake: []
+  delimiter: "\r\n\r\n"
+  headers:
+    Content-Type: "application/json"
+
+mutation:
+  max_size: 65536
+  strategies:
+    - bitflip
+    - byteinsert
+    - boundary
+    - format
+    - repeat
+    - truncate
+    - dictionary
+    - havoc
+  dictionary:
+    - '{"type":"checkin"}'
+    - '{"id":"'
+    - '","data":"'
+    - '"tasks":['
+    - "GET / HTTP/1.1\r\n"
+    - "POST /api/ HTTP/1.1\r\n"
+    - "Content-Length: "
+    - "Transfer-Encoding: chunked"
+    - "Authorization: Bearer "
+    - "../../../etc/passwd"
+    - "{{7*7}}"
+    - "${jndi:ldap://x/}"
+    - "' OR '1'='1"
+
+monitor:
+  crash_patterns:
+    - "segmentation fault"
+    - "panic"
+    - "fatal error"
+    - "stack trace"
+    - "core dumped"
+    - "access violation"
+  error_patterns:
+    - "internal server error"
+    - "500"
+    - "bad request"
+    - "exception"
+    - "traceback"
+    - "syntax error"
+  success_pattern: "200 OK"

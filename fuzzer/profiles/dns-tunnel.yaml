@@ -1,0 +1,36 @@
+name: dns-tunnel
+protocol:
+  type: udp
+  length_field:
+    offset: 0
+    size: 2
+    byte_order: big
+    includes: header
+
+mutation:
+  max_size: 512
+  strategies:
+    - bitflip
+    - boundary
+    - byteinsert
+    - truncate
+    - arithmetic
+    - havoc
+  dictionary:
+    - "\x00\x01"
+    - "\x00\x1c"
+    - "\x00\x10"
+    - "\x00\xff"
+    - "\x00\x05"
+    - "\x00\x0f"
+    - "\x00\x06"
+    - "\x00\x02"
+
+monitor:
+  crash_patterns:
+    - "SERVFAIL"
+    - "REFUSED"
+  error_patterns:
+    - "FORMERR"
+    - "NXDOMAIN"
+  success_pattern: "NOERROR"
