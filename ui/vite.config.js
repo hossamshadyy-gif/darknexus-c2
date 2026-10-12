@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
-  base: '/darknexus-c2/',
+  base: process.env.GITHUB_PAGES ? '/darknexus-c2/' : './',
   server: {
     port: 3000,
     proxy: {
